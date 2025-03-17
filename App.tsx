@@ -1,131 +1,137 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import React, { useEffect, useState } from 'react';
+import { Alert, PermissionsAndroid, View, Button, Image, Platform, TouchableOpacity, Text } from 'react-native';
+import messaging from '@react-native-firebase/messaging';
+import { launchImageLibrary } from 'react-native-image-picker';
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+const App = () => {
+  const [selectedImage, setSelectedImage] = useState(null);
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
-
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  const requestStoragePermission = async () => {
+    if (Platform.OS === 'android') {
+      if (Platform.Version >= 33) {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES
+        );
+        return granted === PermissionsAndroid.RESULTS.GRANTED;
+      } else {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE
+        );
+        return granted === PermissionsAndroid.RESULTS.GRANTED;
+      }
+    }
+    return true;
   };
 
-  /*
-   * To keep the template simple and small we're adding padding to prevent view
-   * from rendering under the System UI.
-   * For bigger apps the reccomendation is to use `react-native-safe-area-context`:
-   * https://github.com/AppAndFlow/react-native-safe-area-context
-   *
-   * You can read more about it here:
-   * https://github.com/react-native-community/discussions-and-proposals/discussions/827
-   */
-  const safePadding = '5%';
+  const imagePicker = async () => {
+    console.log("Button Pressed");
+
+    const permissionGranted = await requestStoragePermission();
+    if (!permissionGranted) return;
+
+    const options = {
+      mediaType: 'photo',
+      maxWidth: 800,
+      maxHeight: 800,
+      quality: 0.8,
+    };
+
+    launchImageLibrary(options, (response) => {
+      console.log("Response:", response);
+
+      if (response.didCancel) {
+        Alert.alert('Cancelled', 'You did not select any image');
+      } else if (response.errorMessage) {
+        Alert.alert('Image Picker Error:', response.errorMessage);
+      } else if (response.assets && response.assets.length > 0) {
+        setSelectedImage(response.assets[0].uri);
+        console.log("Image Selected:", response.assets[0].uri);
+      }
+    });
+  };
+
+  useEffect(() => {
+    requestPermission();
+    getToken();
+    handleBackgroundNotification();
+  }, []);
+
+  const requestPermission = async () => {
+    if (Platform.OS === 'android') {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
+      );
+
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('Notification Permission Granted');
+      } else {
+        console.log('Notification Permission Denied');
+      }
+    }
+  };
+
+  const getToken = async () => {
+    const token = await messaging().getToken();
+    console.log('FCM Token:', token);
+  };
+
+  useEffect(() => {
+    const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+      console.log('Foreground Notification:', remoteMessage);
+      if (remoteMessage.notification) {
+        Alert.alert('New Notification', remoteMessage.notification.body);
+      }
+    });
+
+    return unsubscribe;
+  }, []);
+
+  const handleBackgroundNotification = () => {
+    messaging()
+      .setBackgroundMessageHandler(async (remoteMessage) => {
+        console.log('Background Notification:', remoteMessage);
+      });
+
+    messaging().onNotificationOpenedApp((remoteMessage) => {
+      console.log('App Opened from Notification:', remoteMessage);
+    });
+
+    messaging()
+      .getInitialNotification()
+      .then((remoteMessage) => {
+        if (remoteMessage) {
+          console.log('App Launched from Notification:', remoteMessage);
+        }
+      });
+  };
 
   return (
-    <View style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        style={backgroundStyle}>
-        <View style={{paddingRight: safePadding}}>
-          <Header/>
-        </View>
-        <View
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f5f5f5' }}>
+      
+      <TouchableOpacity onPress={imagePicker} style={{
+        backgroundColor: '#007BFF',
+        paddingVertical: 12,
+        paddingHorizontal: 20,
+        borderRadius: 8,
+        marginBottom: 20
+      }}>
+        <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>Pick Image from Gallery</Text>
+      </TouchableOpacity>
+
+      {selectedImage && (
+        <Image
+          source={{ uri: selectedImage }}
           style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-            paddingHorizontal: safePadding,
-            paddingBottom: safePadding,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
+            width: 150,
+            height: 150,
+            borderRadius: 75, // Circular shape
+            borderWidth: 3,
+            borderColor: '#fffff',
+          }}
+        />
+      )}
     </View>
   );
-}
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+};
 
 export default App;
