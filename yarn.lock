@@ -1815,6 +1815,11 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@notifee/react-native@^9.1.8":
+  version "9.1.8"
+  resolved "https://registry.yarnpkg.com/@notifee/react-native/-/react-native-9.1.8.tgz#3d55cb3fbcc21f9e35931e366afdf64b294da891"
+  integrity sha512-Az/dueoPerJsbbjRxu8a558wKY+gONUrfoy3Hs++5OqbeMsR0dYe6P+4oN6twrLFyzAhEA1tEoZRvQTFDRmvQg==
+
 "@protobufjs/aspromise@^1.1.1", "@protobufjs/aspromise@^1.1.2":
   version "1.1.2"
   resolved "https://registry.npmjs.org/@protobufjs/aspromise/-/aspromise-1.1.2.tgz"
@@ -2239,9 +2244,17 @@
   dependencies:
     color "^4.2.3"
 
+"@react-navigation/native-stack@^7.2.1":
+  version "7.2.1"
+  resolved "https://registry.yarnpkg.com/@react-navigation/native-stack/-/native-stack-7.2.1.tgz#0d89e13999520a3b05de742ff1f6745b9e981870"
+  integrity sha512-zqC6DVpO4pFZrl+8JuIgV8qk+AGdTuv+hJ5EHePmzs9gYSUrDpw6LahFCiXshwBvi9LinIw9Do7mtnQK2Q8AGA==
+  dependencies:
+    "@react-navigation/elements" "^2.2.6"
+    warn-once "^0.1.1"
+
 "@react-navigation/native@^7.0.15":
   version "7.0.15"
-  resolved "https://registry.npmjs.org/@react-navigation/native/-/native-7.0.15.tgz"
+  resolved "https://registry.yarnpkg.com/@react-navigation/native/-/native-7.0.15.tgz#683f7e41c27c0728ca0f254825c960e97b0e5983"
   integrity sha512-72PabJJ8VY3GM8i/DCutFW+ATED96ZV6NH+bW+ry1EL0ZFGHoie96H+KzTqktsrUbBw1rd9KXbEQhBQgo0N7iQ==
   dependencies:
     "@react-navigation/core" "^7.4.0"
@@ -6108,6 +6121,11 @@ react-devtools-core@^6.0.1:
     shell-quote "^1.6.1"
     ws "^7"
 
+react-freeze@^1.0.0:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/react-freeze/-/react-freeze-1.0.4.tgz#cbbea2762b0368b05cbe407ddc9d518c57c6f3ad"
+  integrity sha512-r4F0Sec0BLxWicc7HEyo2x3/2icUTrRmDjaaRyzzn+7aDyFZliszMDOgLVwSnQnYENOlL1o569Ze2HZefk8clA==
+
 react-is@^16.13.1:
   version "16.13.1"
   resolved "https://registry.npmjs.org/react-is/-/react-is-16.13.1.tgz"
@@ -6137,6 +6155,14 @@ react-native-safe-area-context@^5.3.0:
   version "5.3.0"
   resolved "https://registry.npmjs.org/react-native-safe-area-context/-/react-native-safe-area-context-5.3.0.tgz"
   integrity sha512-glV9bwuozTjf/JDBIBm+ITnukHNaUT3nucgdeADwjtHsfEN3RL5UO6nq99vvdWv5j/O9yCZBvFncM1BBQ+UvpQ==
+
+react-native-screens@^4.9.2:
+  version "4.9.2"
+  resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-4.9.2.tgz#40bb8a405997414e1258b51175662880f8588397"
+  integrity sha512-87gR7XRIirACYxtYltEl1BbUo5r0W4AFPckUDDzATAN6LIUZ2PC3bX6UAFeoEBEqBbfaemRZTWSYHl6MCZFSgw==
+  dependencies:
+    react-freeze "^1.0.0"
+    warn-once "^0.1.0"
 
 react-native@0.78.0:
   version "0.78.0"
@@ -7099,6 +7125,11 @@ walker@^1.0.7, walker@^1.0.8:
   integrity sha512-ts/8E8l5b7kY0vlWLewOkDXMmPdLcVV4GmOQLyxuSswIJsweeFZtAsMF7k1Nszz+TYBQrlYRmzOnr398y1JemQ==
   dependencies:
     makeerror "1.0.12"
+
+warn-once@^0.1.0, warn-once@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/warn-once/-/warn-once-0.1.1.tgz#952088f4fb56896e73fd4e6a3767272a3fccce43"
+  integrity sha512-VkQZJbO8zVImzYFteBXvBOZEl1qL175WH8VmZcxF2fZAoudNhNDvHi+doCaAEdU2l2vtcIwa2zn0QK5+I1HQ3Q==
 
 wcwidth@^1.0.1:
   version "1.0.1"
